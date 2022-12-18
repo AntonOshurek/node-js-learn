@@ -1,0 +1,26 @@
+{
+  "name": "js-learn",
+  "version": "1.0.0",
+  "description": "repo created special for learning node.js and expres",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntonOshurek/node-js-learn.git"
+  },
+  "keywords": [
+    "learn",
+    "nodejs",
+    "node",
+    "learn",
+    "node"
+  ],
+  "author": "Anton Oshurek",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AntonOshurek/node-js-learn/issues"
+  },
+  "homepage": "https://github.com/AntonOshurek/node-js-learn#readme"
+}
