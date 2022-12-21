@@ -1,5 +1,4 @@
 import axios from 'axios';
-import https from 'https';
 import { getKeyValue, TOKEN_DICTIONARY } from './storage.service.js';
 
 const getWeather = async (city) => {
@@ -18,7 +17,7 @@ const getWeather = async (city) => {
   const { data: coordinates } = await axios.get('http://api.openweathermap.org/geo/1.0/direct', {
     params: {
       q: `{${city}}`,
-      appid: '3ee1caa005bcc97e06effbf8377e9a06',
+      appid: token,
     }
   });
 
