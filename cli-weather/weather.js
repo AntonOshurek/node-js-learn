@@ -1,8 +1,17 @@
 #!/usr/bin/env node
 
 import { getArgs } from "./helpers/args.js";
-import { printHelp } from "./services/log.service.js";
+import { printHelp, printSuccess, printError } from "./services/log.service.js";
 import { saveKeyValue } from "./services/storage.service.js";
+
+const saveToken = async (token) => {
+  try {
+    await saveKeyValue('token', token);
+    printSuccess(`Токен сохранён успешно! - ${token}`);
+  } catch(e) {
+    printError(`Возникла ошибка при сохранении токена - ${e.message}`);
+  };
+};
 
 const initCLI = () => {
   console.log('init CLI');
@@ -14,7 +23,7 @@ const initCLI = () => {
   if(args.s) {
   }
   if(args.t) {
-    saveKeyValue('token', args.k);
+    return saveToken(args.t);
   }
   //вывести погоду
 };
