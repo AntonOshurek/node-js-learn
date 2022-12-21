@@ -1,0 +1,24 @@
+{
+  "name": "cli-weather",
+  "version": "1.0.0",
+  "description": "cli application for show current weather",
+  "main": "weather.js",
+  "bin": {
+    "weather": "weather.js"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "weather",
+    "cli"
+  ],
+  "author": "Anton Oshurek",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.2.1",
+    "chalk": "^5.2.0",
+    "dedent-js": "^1.0.1"
+  }
+}
