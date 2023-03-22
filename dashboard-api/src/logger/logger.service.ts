@@ -1,10 +1,16 @@
-import { Logger } from 'tslog';
+//dependencies
+import { Logger } from 'tslog'; //библиотека для логирования. NPM - https://www.npmjs.com/package/tslog
+//types
+import type { ILoger } from './loger.interface';
 
-export class LoggerService {
+export class LoggerService implements ILoger {
   public loger;
 
   constructor() {
-    this.loger = new Logger({ name: "logger.srvice" });
+    this.loger = new Logger({
+      name: "logger.srvice",
+      prettyLogTemplate: "{{yyyy}}.{{mm}}.{{dd}} {{hh}}:{{MM}}:{{ss}}:{{ms}} {{logLevelName}}\t",
+    });
   };
 
   log(...arg: unknown[]) {
@@ -18,4 +24,4 @@ export class LoggerService {
   warn(...arg: unknown[]) {
     this.loger.warn(...arg);
   };
-}
+};

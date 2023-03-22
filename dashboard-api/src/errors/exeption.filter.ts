@@ -1,6 +1,9 @@
+//dependencies
 import { NextFunction, Request, Response } from "express";
-import { LoggerService } from "../logger/logger.service";
-import { IExeptionFilter } from "./exeption.filter.interface";
+//types
+import type { LoggerService } from "../logger/logger.service";
+import type { IExeptionFilter } from "./exeption.filter.interface";
+//classes
 import { HTTPError } from "./http-error.tclass";
 
 export class ExeptionFilter implements IExeptionFilter {

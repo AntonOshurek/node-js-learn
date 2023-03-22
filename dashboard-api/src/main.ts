@@ -1,11 +1,15 @@
 import { App } from "./app";
+//filters
 import { ExeptionFilter } from "./errors/exeption.filter";
-import { LoggerService } from "./logger/logger.service";
+//controlers
 import { UserController } from "./users/users.controller";
+//services
+import { LoggerService } from "./logger/logger.service";
 
 //composition root - точка сбора всех зависимостей
 async function bootstrap() {
   const logger = new LoggerService();
+
   const app = new App(
     logger,
     new UserController(logger),
