@@ -1,22 +1,21 @@
+//dependencies
 import express, { Express } from 'express';
 import { Server } from 'http';
+//services
 import { ExeptionFilter } from './errors/exeption.filter';
-import { LoggerService } from './logger/logger.service';
 import { UserController } from './users/users.controller';
+//types
+import type { ILoger } from './logger/loger.interface';
 
 export class App {
-  app: Express;
+  app: Express; //Express - интерфейс описывающий приложение
   server: Server;
   port: number;
-  logger: LoggerService;
+  logger: ILoger;
   userController: UserController;
   exeptionFilter: ExeptionFilter;
 
-  constructor(
-    logger: LoggerService,
-    userController: UserController,
-    exeptionFilter: ExeptionFilter,
-    ) {
+  constructor( logger: ILoger, userController: UserController, exeptionFilter: ExeptionFilter ) {
     this.app = express();
     this.port = 8000;
     this.logger = logger;
@@ -28,8 +27,8 @@ export class App {
     this.app.use('/users', this.userController.router);
   };
 
-  useExeptionFilters() {
-    this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter));
+  useExeptionFilters() { //фильтр ошибок
+    this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter)); //биндим метод catch к функции в this.exeptionFilter
   };
 
   public async init() {

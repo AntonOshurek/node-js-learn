@@ -1,6 +1,8 @@
-import { LoggerService } from "../logger/logger.service";
+//dependencies
 import { Response, Router } from 'express';
-import { IControllerRoute } from "./route.onterface";
+//services
+import { LoggerService } from "../logger/logger.service";
+import type { IControllerRoute } from "./route.interface";
 
 export abstract class BaseController {
   private readonly _router: Router;
@@ -28,9 +30,9 @@ export abstract class BaseController {
 
   protected bindRoutes(routes: IControllerRoute[]) {
     for(const route of routes) {
-      this.logger.log(`[${route.method}] ${route.path}`);
-      const handler = route.func.bind(this);
-      this.router[route.method](route.path, handler);
+      this.logger.log(`Bind - [${route.method}] ${route.path}`); //логируем путь который будем биндить.
+      const handler = route.func.bind(this); //биндим функцию hndler из переданного роута в наш класс.
+      this.router[route.method](route.path, handler); // создаём Router из express основываясь на методе, пути и функции из переданного роута.
     };
   };
 };

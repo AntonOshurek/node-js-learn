@@ -4,9 +4,7 @@ import { HTTPError } from "../errors/http-error.tclass";
 import { LoggerService } from "../logger/logger.service";
 
 export class UserController extends BaseController {
-  constructor(
-    logger: LoggerService
-  ) {
+  constructor( logger: LoggerService ) {
     super(logger);
     this.bindRoutes([
       {path: '/register', method: 'post', func: this.register},
@@ -15,8 +13,8 @@ export class UserController extends BaseController {
   };
 
   login(req: Request, res: Response, next: NextFunction) {
-    // this.ok(res, 'login');
-    next(new HTTPError(401, 'ошибка авторизации', 'login'));
+    this.ok(res, 'login');
+    // next(new HTTPError(401, 'ошибка авторизации', 'login'));
   };
 
   register(req: Request, res: Response, next: NextFunction) {
