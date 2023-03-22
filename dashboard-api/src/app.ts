@@ -5,22 +5,25 @@ import { Server } from 'http';
 import { ExeptionFilter } from './errors/exeption.filter';
 import { UserController } from './users/users.controller';
 //types
-import type { ILoger } from './logger/loger.interface';
+import type { ILogger } from './logger/loger.interface';
+import { injectable } from 'inversify/lib/annotation/injectable';
+import { TYPES } from './types';
+import { inject } from 'inversify';
+import 'reflect-metadata';
 
+@injectable()
 export class App {
   app: Express; //Express - интерфейс описывающий приложение
   server: Server;
   port: number;
-  logger: ILoger;
-  userController: UserController;
-  exeptionFilter: ExeptionFilter;
 
-  constructor( logger: ILoger, userController: UserController, exeptionFilter: ExeptionFilter ) {
+  constructor(
+    @inject(TYPES.ILogger) private logger: ILogger,
+    @inject(TYPES.UserController) private userController: UserController,
+    @inject(TYPES.ExeptionFilter) private exeptionFilter: ExeptionFilter,
+    ) {
     this.app = express();
     this.port = 8000;
-    this.logger = logger;
-    this.userController = userController;
-    this.exeptionFilter = exeptionFilter;
   };
 
   useRoutes() {

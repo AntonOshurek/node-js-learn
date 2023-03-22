@@ -1,9 +1,12 @@
 //dependencies
+import { injectable } from 'inversify';
 import { Logger } from 'tslog'; //библиотека для логирования. NPM - https://www.npmjs.com/package/tslog
 //types
-import type { ILoger } from './loger.interface';
+import type { ILogger } from './loger.interface';
+import 'reflect-metadata';
 
-export class LoggerService implements ILoger {
+@injectable()
+export class LoggerService implements ILogger {
   public loger;
 
   constructor() {
