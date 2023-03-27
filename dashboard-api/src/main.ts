@@ -14,6 +14,9 @@ import { IExeptionFilter } from './errors/exeption.filter.interface';
 import 'reflect-metadata';
 import { ContainerModule } from 'inversify/lib/container/container_module';
 import { interfaces } from 'inversify/lib/interfaces/interfaces';
+import { IUserController } from './users/users.controller.interface';
+import { IUserService } from './users/user.service.interface';
+import { UserService } from './users/users.service';
 
 export interface IBootstrapReturn {
 	appContainer: Container;
@@ -24,7 +27,8 @@ export interface IBootstrapReturn {
 export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<ILogger>(TYPES.ILogger).to(LoggerService);
 	bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter);
-	bind<UserController>(TYPES.UserController).to(UserController);
+	bind<IUserController>(TYPES.UserController).to(UserController);
+	bind<IUserService>(TYPES.UserService).to(UserService);
 	bind<App>(TYPES.Application).to(App);
 });
 
