@@ -34,8 +34,10 @@ export abstract class BaseController {
 	protected bindRoutes(routes: IControllerRoute[]): void {
 		for (const route of routes) {
 			this.logger.log(`Bind - [${route.method}] ${route.path}`); //логируем путь который будем биндить.
+			const middleware = route.middlewares?.map((m) => m.execute.bind(m)); // перебираем обработчики и биндим им контекст
 			const handler = route.func.bind(this); //биндим функцию hndler из переданного роута в наш класс.
-			this.router[route.method](route.path, handler); // создаём Router из express основываясь на методе, пути и функции из переданного роута.
+			const pipline = middleware ? [...middleware, handler] : handler; // совмещаем midleware и handler в одном массиве
+			this.router[route.method](route.path, pipline); // создаём Router из express основываясь на методе, пути и функции из переданного роута.
 		}
 	}
 }
