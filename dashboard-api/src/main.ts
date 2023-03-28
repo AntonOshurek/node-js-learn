@@ -17,6 +17,8 @@ import { interfaces } from 'inversify/lib/interfaces/interfaces';
 import { IUserController } from './users/users.controller.interface';
 import { IUserService } from './users/user.service.interface';
 import { UserService } from './users/users.service';
+import { IConfigService } from './config/config.service.interface';
+import { ConfigService } from './config/config.service';
 
 export interface IBootstrapReturn {
 	appContainer: Container;
@@ -25,11 +27,12 @@ export interface IBootstrapReturn {
 
 //composition root - точка сбора всех зависимостей
 export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
-	bind<ILogger>(TYPES.ILogger).to(LoggerService);
-	bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter);
-	bind<IUserController>(TYPES.UserController).to(UserController);
-	bind<IUserService>(TYPES.UserService).to(UserService);
-	bind<App>(TYPES.Application).to(App);
+	bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
+	bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter).inSingletonScope();
+	bind<IUserController>(TYPES.UserController).to(UserController).inSingletonScope();
+	bind<IUserService>(TYPES.UserService).to(UserService).inSingletonScope();
+	bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
+	bind<App>(TYPES.Application).to(App).inSingletonScope();
 });
 
 function bootstrap(): IBootstrapReturn {
