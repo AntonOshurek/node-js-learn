@@ -10,6 +10,7 @@ import { UserRegisterDto } from './dto/user-register.dto';
 import { IUserService } from './user.service.interface';
 import { HTTPError } from '../errors/http-error.tclass';
 import { ValidateMiddleware } from '../common/validate.middleware';
+import { sign } from 'jsonwebtoken';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
