@@ -11,8 +11,9 @@ export class AuthMiddleware implements IMiddleWare {
 				if (err) {
 					next();
 				} else if (payload) {
-					console.log(payload);
-					req.user = payload.email; // error here!!!!!!!!
+					if (typeof payload !== 'string') {
+						req.user = payload.email;
+					}
 					next();
 				}
 			});
