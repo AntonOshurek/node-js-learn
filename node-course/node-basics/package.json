@@ -1,0 +1,19 @@
+{
+	"name": "nodejs-basics-things",
+	"version": "1.0.0",
+	"description": "basic nodejs",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [
+		"basics"
+	],
+	"author": "Oshurek Anton",
+	"license": "ISC",
+	"devDependencies": {
+		"@types/node": "^20.9.0",
+		"nodemon": "^3.0.1"
+	}
+}
