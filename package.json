@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/AntonOshurek/node-js-learn/issues"
   },
-  "homepage": "https://github.com/AntonOshurek/node-js-learn#readme"
+  "homepage": "https://github.com/AntonOshurek/node-js-learn#readme",
+  "dependencies": {
+    "mongodb": "^6.3.0"
+  }
 }
