@@ -3,6 +3,7 @@ import {
 	Body,
 	Controller,
 	Get,
+	HttpCode,
 	Param,
 	Post,
 	Put,
@@ -19,6 +20,12 @@ class createDTO {
 
 	@IsInt()
 	age: number;
+
+	@IsString()
+	email: string;
+
+	@IsString()
+	password: string;
 }
 
 @Controller('api')
@@ -44,14 +51,21 @@ export class AppController {
 		}
 	}
 
+	@Post('login')
 	@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+	async login(@Body() body: createDTO): Promise<User> {
+		return this.appService.login(body);
+	}
+
 	@Post()
+	@HttpCode(201)
+	@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 	async sendData(@Body() body: createDTO): Promise<User> {
 		return this.appService.sendData(body);
 	}
 
-	@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 	@Put(':id')
+	@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 	async updateUserById(
 		@Param('id') id: string,
 		@Body() updateData: Partial<createDTO>,
