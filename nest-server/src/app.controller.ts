@@ -3,17 +3,14 @@ import {
 	Body,
 	Controller,
 	Get,
-	HttpException,
-	HttpStatus,
 	Param,
-	ParseIntPipe,
 	Post,
 	Put,
 	UsePipes,
 	ValidationPipe,
 } from '@nestjs/common';
 import { AppService } from './app.service.js';
-import { IsInt, IsNumber, IsString } from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 import { User } from './user.schema.js';
 
 class createDTO {

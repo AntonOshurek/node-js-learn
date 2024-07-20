@@ -1,16 +1,7 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './user.schema.js';
-
-interface IData {
-	id: number;
-	name: string;
-}
-
-type dataArrayType = IData[];
-
-const data: dataArrayType = [{ id: 23, name: 'anton' }];
 
 @Injectable()
 export class AppService {
@@ -30,10 +21,6 @@ export class AppService {
 	}
 
 	async updateUserById(id: string, updateData: Partial<User>): Promise<User> {
-		// return this.userModel
-		// 	.findByIdAndUpdate(id, updateData, { new: true })
-		// 	.exec();
-
 		return this.userModel
 			.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
 			.exec();
