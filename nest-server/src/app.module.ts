@@ -1,15 +1,15 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { HostMiddleware } from './host.midleware.js';
 import { LoggerMiddleware } from './logger.midleware.js';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from './user.schema.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserModule } from './user/user.module.js';
 
 @Module({
 	imports: [
-		ConfigModule.forRoot(),
+		ConfigModule.forRoot({
+			isGlobal: true,
+		}),
 		MongooseModule.forRootAsync({
 			imports: [ConfigModule],
 			useFactory: async (configService: ConfigService) => ({
@@ -17,13 +17,16 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 			}),
 			inject: [ConfigService],
 		}),
-		MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+		UserModule,
 	],
-	controllers: [AppController],
-	providers: [AppService],
+	controllers: [],
+	providers: [],
+	exports: [],
 })
 export class AppModule {
 	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(LoggerMiddleware, HostMiddleware).forRoutes(AppController);
+		consumer
+			.apply(LoggerMiddleware, HostMiddleware)
+			.forRoutes({ path: '*', method: RequestMethod.ALL }); // Применяем middleware ко всем маршрутам
 	}
 }
