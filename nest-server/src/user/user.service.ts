@@ -27,25 +27,20 @@ export class UserService {
 	async updateUserById(
 		id: string,
 		newUserData: Partial<userDTO>,
-	): Promise<userDTO> {
-		let updatedUser;
+	): Promise<Partial<userDTO>> {
+		const updateData: Partial<userDTO> = { ...newUserData };
 
 		if (newUserData.password) {
-			updatedUser = new this.userModel({
-				...newUserData,
-				password: this.generateHash(newUserData.password),
-			});
-		} else {
-			updatedUser = {
-				...newUserData,
-			};
+			updateData.password = await this.generateHash(newUserData.password);
 		}
 
-		this.userModel
-			.findByIdAndUpdate(id, updatedUser, { new: true, runValidators: true })
+		await this.userModel
+			.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
 			.exec();
 
-		return updatedUser;
+		console.log(newUserData);
+
+		return newUserData;
 	}
 
 	async getUserByEmail(email: string): Promise<User> {

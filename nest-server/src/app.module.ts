@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller.js';
 import { HostMiddleware } from './host.midleware.js';
 import { LoggerMiddleware } from './logger.midleware.js';
@@ -23,6 +23,8 @@ import { UserModule } from './user/user.module.js';
 })
 export class AppModule {
 	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(LoggerMiddleware, HostMiddleware).forRoutes(AppController);
+		consumer
+			.apply(LoggerMiddleware, HostMiddleware)
+			.forRoutes({ path: '*', method: RequestMethod.ALL }); // Применяем middleware ко всем маршрутам
 	}
 }

@@ -50,7 +50,7 @@ export class UserController {
 	async updateUserById(
 		@Param('id') id: string,
 		@Body() updateData: Partial<userDTO>,
-	): Promise<userDTO> {
+	): Promise<Partial<userDTO>> {
 		return this.userService.updateUserById(id, updateData);
 	}
 
