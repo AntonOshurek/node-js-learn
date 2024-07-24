@@ -26,20 +26,18 @@ export class UserService {
 
 	async updateUserById(
 		id: string,
-		updateData: Partial<userDTO>,
+		newUserData: Partial<userDTO>,
 	): Promise<userDTO> {
 		let updatedUser;
 
-		if (updateData.password) {
-			const salt = genSaltSync(10);
-			const hashpass = await hash(updateData.password, salt);
+		if (newUserData.password) {
 			updatedUser = new this.userModel({
-				...updateData,
-				password: hashpass,
+				...newUserData,
+				password: this.generateHash(newUserData.password),
 			});
 		} else {
 			updatedUser = {
-				...updateData,
+				...newUserData,
 			};
 		}
 
@@ -55,11 +53,9 @@ export class UserService {
 	}
 
 	async createUser(newItem: User): Promise<User> {
-		const salt = genSaltSync(10);
-		const hashpass = await hash(newItem.password, salt);
 		const createdUser = new this.userModel({
 			...newItem,
-			password: hashpass,
+			password: this.generateHash(newItem.password),
 		});
 		return createdUser.save();
 	}
@@ -81,5 +77,12 @@ export class UserService {
 		}
 
 		return credentials;
+	}
+
+	async generateHash(password: string): Promise<string> {
+		const salt = genSaltSync(10);
+		const hashpass = await hash(password, salt);
+
+		return hashpass;
 	}
 }
