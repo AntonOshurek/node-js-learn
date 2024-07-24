@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
-import { AppController } from './app.controller.js';
 import { HostMiddleware } from './host.midleware.js';
 import { LoggerMiddleware } from './logger.midleware.js';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -8,7 +7,9 @@ import { UserModule } from './user/user.module.js';
 
 @Module({
 	imports: [
-		ConfigModule.forRoot(),
+		ConfigModule.forRoot({
+			isGlobal: true,
+		}),
 		MongooseModule.forRootAsync({
 			imports: [ConfigModule],
 			useFactory: async (configService: ConfigService) => ({
@@ -20,6 +21,7 @@ import { UserModule } from './user/user.module.js';
 	],
 	controllers: [],
 	providers: [],
+	exports: [],
 })
 export class AppModule {
 	configure(consumer: MiddlewareConsumer) {

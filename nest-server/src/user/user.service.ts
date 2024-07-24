@@ -10,11 +10,15 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from './user.schema.js';
 //CRYPTO
 import { compare, genSaltSync, hash } from 'bcrypt';
-import { userDTO } from './dto/user.dto.js';
+import { userDTO, userLoginDTO } from './dto/user.dto.js';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
-	constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+	constructor(
+		@InjectModel(User.name) private userModel: Model<UserDocument>,
+		private readonly jwtService: JwtService,
+	) {}
 
 	async getUsers(): Promise<User[]> {
 		return this.userModel.find().exec();
@@ -43,10 +47,6 @@ export class UserService {
 		return newUserData;
 	}
 
-	async getUserByEmail(email: string): Promise<User> {
-		return this.userModel.findOne({ email }).exec();
-	}
-
 	async createUser(newItem: User): Promise<User> {
 		const createdUser = new this.userModel({
 			...newItem,
@@ -55,13 +55,13 @@ export class UserService {
 		return createdUser.save();
 	}
 
-	async login(credentials: User): Promise<User> {
+	async login(credentials: userLoginDTO): Promise<{ access_token: string }> {
 		const findedUser = await this.getUserByEmail(credentials.email);
 
 		if (!findedUser) {
 			throw new HttpException('uncorrect credentials', HttpStatus.NOT_FOUND);
 		}
-
+		console.log('LOGIN');
 		const compareResult = await compare(
 			credentials.password,
 			findedUser.password,
@@ -71,7 +71,13 @@ export class UserService {
 			throw new UnauthorizedException();
 		}
 
-		return credentials;
+		const payload = { sub: findedUser._id, username: findedUser.email };
+		const token = await this.jwtService.signAsync(payload, {
+			privateKey: 'key',
+		});
+		return {
+			access_token: token,
+		};
 	}
 
 	async generateHash(password: string): Promise<string> {
@@ -79,5 +85,9 @@ export class UserService {
 		const hashpass = await hash(password, salt);
 
 		return hashpass;
+	}
+
+	async getUserByEmail(email: string): Promise<User> {
+		return this.userModel.findOne({ email }).exec();
 	}
 }

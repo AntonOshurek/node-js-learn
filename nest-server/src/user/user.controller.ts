@@ -11,7 +11,7 @@ import {
 	ValidationPipe,
 } from '@nestjs/common';
 //DATA
-import { userDTO } from './dto/user.dto.js';
+import { userDTO, userLoginDTO } from './dto/user.dto.js';
 //SERVICES
 import { UserService } from './user.service.js';
 
@@ -56,7 +56,7 @@ export class UserController {
 
 	@Post('login')
 	@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-	async login(@Body() body: userDTO): Promise<userDTO> {
+	async login(@Body() body: userLoginDTO): Promise<{ access_token: string }> {
 		return this.userService.login(body);
 	}
 }
