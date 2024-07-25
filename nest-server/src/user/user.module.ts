@@ -17,12 +17,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 				console.log('JWT Secret:', secret);
 				return {
 					secret: secret,
-					signOptions: { expiresIn: '60m' },
+					signOptions: { expiresIn: '1m' },
 				};
 			},
 		}),
 	],
 	controllers: [UserController],
 	providers: [UserService],
+	exports: [JwtModule],
 })
 export class UserModule {}
