@@ -46,6 +46,15 @@ export class UserService {
 	}
 
 	async createUser(newItem: createUserDTO): Promise<User> {
+		const isEmailAlredyIsset = await this.getUserByEmail(newItem.email);
+
+		if (isEmailAlredyIsset !== null) {
+			throw new HttpException(
+				'User with this email alredy exist',
+				HttpStatus.CONFLICT,
+			);
+		}
+
 		const createdUser = new this.userModel({
 			...newItem,
 			password: await this.generateHash(newItem.password),
