@@ -1,6 +1,10 @@
 import { IsString, IsInt } from 'class-validator';
+import type { Types } from 'mongoose';
 
 export class userDTO {
+	@IsString()
+	_id: Types.ObjectId;
+
 	@IsString()
 	name: string;
 
@@ -12,9 +16,20 @@ export class userDTO {
 
 	@IsString()
 	password: string;
+}
+
+export class createUserDTO {
+	@IsString()
+	name: string;
+
+	@IsInt()
+	age: number;
 
 	@IsString()
-	_id: string;
+	email: string;
+
+	@IsString()
+	password: string;
 }
 
 export class userLoginDTO {

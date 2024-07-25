@@ -3,11 +3,8 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema({ collection: 'users', versionKey: '__v' })
+@Schema({ collection: 'users' })
 export class User {
-	@Prop()
-	_id: string;
-
 	@Prop()
 	name: string;
 

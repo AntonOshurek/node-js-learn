@@ -11,16 +11,17 @@ import {
 	ValidationPipe,
 } from '@nestjs/common';
 //DATA
-import { userDTO, userLoginDTO } from './dto/user.dto.js';
+import { createUserDTO, userDTO, userLoginDTO } from './dto/user.dto.js';
 //SERVICES
 import { UserService } from './user.service.js';
+import { User } from './user.schema.js';
 
 @Controller('user')
 export class UserController {
 	constructor(private readonly userService: UserService) {}
 
 	@Get()
-	async getAll(): Promise<userDTO[]> {
+	async getAll(): Promise<User[]> {
 		return this.userService.getUsers();
 	}
 
@@ -41,8 +42,8 @@ export class UserController {
 	@Post()
 	@HttpCode(201)
 	@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-	async createUser(@Body() body: userDTO): Promise<userDTO> {
-		return this.userService.createUser(body);
+	async createUser(@Body() body: createUserDTO): Promise<User> {
+		return await this.userService.createUser(body);
 	}
 
 	@Put(':id')

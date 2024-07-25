@@ -10,7 +10,7 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from './user.schema.js';
 //CRYPTO
 import { compare, genSaltSync, hash } from 'bcrypt';
-import { userDTO, userLoginDTO } from './dto/user.dto.js';
+import { createUserDTO, userDTO, userLoginDTO } from './dto/user.dto.js';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class UserService {
 		return this.userModel.find().exec();
 	}
 
-	async getUserById(id: string): Promise<User> {
+	async getUserById(id: string): Promise<UserDocument> {
 		return this.userModel.findById(id).exec();
 	}
 
@@ -42,15 +42,13 @@ export class UserService {
 			.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
 			.exec();
 
-		console.log(newUserData);
-
 		return newUserData;
 	}
 
-	async createUser(newItem: User): Promise<User> {
+	async createUser(newItem: createUserDTO): Promise<User> {
 		const createdUser = new this.userModel({
 			...newItem,
-			password: this.generateHash(newItem.password),
+			password: await this.generateHash(newItem.password),
 		});
 		return createdUser.save();
 	}
@@ -61,7 +59,7 @@ export class UserService {
 		if (!findedUser) {
 			throw new HttpException('uncorrect credentials', HttpStatus.NOT_FOUND);
 		}
-		console.log('LOGIN');
+
 		const compareResult = await compare(
 			credentials.password,
 			findedUser.password,
@@ -72,9 +70,8 @@ export class UserService {
 		}
 
 		const payload = { sub: findedUser._id, username: findedUser.email };
-		const token = await this.jwtService.signAsync(payload, {
-			privateKey: 'key',
-		});
+		const token = await this.jwtService.signAsync(payload);
+
 		return {
 			access_token: token,
 		};
@@ -87,7 +84,7 @@ export class UserService {
 		return hashpass;
 	}
 
-	async getUserByEmail(email: string): Promise<User> {
+	async getUserByEmail(email: string): Promise<UserDocument | null> {
 		return this.userModel.findOne({ email }).exec();
 	}
 }
