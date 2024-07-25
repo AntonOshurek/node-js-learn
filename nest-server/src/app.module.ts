@@ -4,6 +4,7 @@ import { LoggerMiddleware } from './logger.midleware.js';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module.js';
+import { ProductModule } from './product/product.module.js';
 
 @Module({
 	imports: [
@@ -18,6 +19,7 @@ import { UserModule } from './user/user.module.js';
 			inject: [ConfigService],
 		}),
 		UserModule,
+		ProductModule,
 	],
 	controllers: [],
 	providers: [],
