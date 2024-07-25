@@ -9,7 +9,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
 	imports: [
 		MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-		JwtModule,
 		JwtModule.registerAsync({
 			imports: [ConfigModule],
 			inject: [ConfigService],
@@ -25,5 +24,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 	],
 	controllers: [UserController],
 	providers: [UserService],
+	exports: [JwtModule],
 })
 export class UserModule {}
