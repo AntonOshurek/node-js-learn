@@ -4,6 +4,7 @@ import {
 	Controller,
 	Get,
 	HttpCode,
+	Ip,
 	Param,
 	Post,
 	Put,
@@ -57,7 +58,11 @@ export class UserController {
 
 	@Post('login')
 	@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-	async login(@Body() body: userLoginDTO): Promise<{ access_token: string }> {
+	async login(
+		@Body() body: userLoginDTO,
+		@Ip() ip,
+	): Promise<{ access_token: string }> {
+		const ipAddress = console.log('IP Address:', ip); // Логирование IP адреса
 		return this.userService.login(body);
 	}
 }
