@@ -5,6 +5,8 @@ import { UserController } from './user.controller.js';
 import { UserService } from './user.service.js';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStratagy } from './strategies/jwt.stratagy.js';
 
 @Module({
 	imports: [
@@ -14,16 +16,18 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 			inject: [ConfigService],
 			useFactory: async (ConfigService: ConfigService) => {
 				const secret = ConfigService.get<string>('SECRET');
-				console.log('JWT Secret:', secret);
+
 				return {
 					secret: secret,
 					signOptions: { expiresIn: '60m' },
 				};
 			},
 		}),
+		PassportModule,
+		ConfigModule,
 	],
 	controllers: [UserController],
-	providers: [UserService],
+	providers: [UserService, JwtStratagy],
 	exports: [JwtModule],
 })
 export class UserModule {}
