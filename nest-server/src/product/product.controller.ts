@@ -12,6 +12,7 @@ import { ProductService } from './product.service.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
 import { AuthGuard } from '../AuthGuard.js';
+import { JwtAuthGuard } from '../jwt.guard.js';
 
 @UseGuards(AuthGuard)
 @Controller('product')
