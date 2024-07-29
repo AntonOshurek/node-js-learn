@@ -4,7 +4,6 @@ import {
 	Controller,
 	Get,
 	HttpCode,
-	Ip,
 	Param,
 	Post,
 	Put,
@@ -12,7 +11,7 @@ import {
 	ValidationPipe,
 } from '@nestjs/common';
 //DATA
-import { createUserDTO, userDTO, userLoginDTO } from './dto/user.dto.js';
+import { createUserDTO, userDTO } from './dto/user.dto.js';
 //SERVICES
 import { UserService } from './user.service.js';
 import { User } from './user.schema.js';
@@ -54,15 +53,5 @@ export class UserController {
 		@Body() updateData: Partial<userDTO>,
 	): Promise<Partial<userDTO>> {
 		return this.userService.updateUserById(id, updateData);
-	}
-
-	@Post('login')
-	@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-	async login(
-		@Body() body: userLoginDTO,
-		@Ip() ip,
-	): Promise<{ access_token: string }> {
-		const ipAddress = console.log('IP Address:', ip); // Логирование IP адреса
-		return this.userService.login(body);
 	}
 }

@@ -5,6 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module.js';
 import { ProductModule } from './product/product.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { JwtConfigModule } from './jwt/jwt.module.js';
 
 @Module({
 	imports: [
@@ -20,6 +22,8 @@ import { ProductModule } from './product/product.module.js';
 		}),
 		UserModule,
 		ProductModule,
+		AuthModule,
+		JwtConfigModule,
 	],
 	controllers: [],
 	providers: [],
