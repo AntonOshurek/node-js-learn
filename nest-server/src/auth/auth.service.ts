@@ -40,6 +40,7 @@ export class AuthService {
 
 		return {
 			access_token: token,
+			user_name: findedUser.name,
 		};
 	}
 
