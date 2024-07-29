@@ -31,11 +31,3 @@ export class createUserDTO {
 	@IsString()
 	password: string;
 }
-
-export class userLoginDTO {
-	@IsString()
-	email: string;
-
-	@IsString()
-	password: string;
-}

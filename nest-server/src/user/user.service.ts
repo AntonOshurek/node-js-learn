@@ -1,16 +1,11 @@
-import {
-	HttpException,
-	HttpStatus,
-	Injectable,
-	UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 //DB
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './user.schema.js';
 //CRYPTO
-import { compare, genSaltSync, hash } from 'bcrypt';
-import { createUserDTO, userDTO, userLoginDTO } from './dto/user.dto.js';
+import { genSaltSync, hash } from 'bcrypt';
+import { createUserDTO, userDTO } from './dto/user.dto.js';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -60,30 +55,6 @@ export class UserService {
 			password: await this.generateHash(newItem.password),
 		});
 		return createdUser.save();
-	}
-
-	async login(credentials: userLoginDTO): Promise<{ access_token: string }> {
-		const findedUser = await this.getUserByEmail(credentials.email);
-
-		if (!findedUser) {
-			throw new HttpException('uncorrect credentials', HttpStatus.NOT_FOUND);
-		}
-
-		const compareResult = await compare(
-			credentials.password,
-			findedUser.password,
-		);
-
-		if (!compareResult) {
-			throw new UnauthorizedException();
-		}
-
-		const payload = { email: findedUser.email, username: findedUser.name };
-		const token = await this.jwtService.signAsync(payload);
-
-		return {
-			access_token: token,
-		};
 	}
 
 	async generateHash(password: string): Promise<string> {
