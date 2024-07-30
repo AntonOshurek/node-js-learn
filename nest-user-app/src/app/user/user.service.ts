@@ -54,11 +54,11 @@ export class UserService {
 			updateData.password = await this.generateHash(newUserData.password);
 		}
 
-		await this.userModel
+		const updatedUser = await this.userModel
 			.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
 			.exec();
 
-		return newUserData;
+		return updatedUser;
 	}
 
 	async createUser(newUser: CreateUserDto): Promise<User> {
@@ -75,6 +75,7 @@ export class UserService {
 			...newUser,
 			password: await this.generateHash(newUser.password),
 		});
+
 		return createdUser.save();
 	}
 

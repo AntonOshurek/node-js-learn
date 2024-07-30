@@ -45,6 +45,6 @@ export class AuthService {
 	}
 
 	private async getUserByEmail(email: string): Promise<UserDocument | null> {
-		return this.userModel.findOne({ email }).exec();
+		return this.userModel.findOne({ email }).select('+password').exec();
 	}
 }
