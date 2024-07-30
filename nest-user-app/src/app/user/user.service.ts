@@ -15,6 +15,8 @@ import { genSaltSync, hash } from 'bcrypt';
 import { userDTO } from './dto/user.dto.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
+//TYPES
+import type { ITokenPayload } from '../auth/types/types.js';
 
 @Injectable()
 export class UserService {
@@ -47,16 +49,29 @@ export class UserService {
 	async updateUserById(
 		id: string,
 		newUserData: UpdateUserDto,
+		userFromTokenPayload: ITokenPayload,
 	): Promise<UpdateUserDto> {
-		const updateData = { ...newUserData };
-
 		if (newUserData.password) {
-			updateData.password = await this.generateHash(newUserData.password);
+			newUserData.password = await this.generateHash(newUserData.password);
 		}
 
+		// const updatedUser = await this.userModel
+		// 	.findByIdAndUpdate(id, newUserData, { new: true, runValidators: true })
+		// 	.exec();
+
 		const updatedUser = await this.userModel
-			.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
+			.findOneAndUpdate(
+				{ _id: id, email: userFromTokenPayload.email },
+				newUserData,
+				{ new: true, runValidators: true },
+			)
 			.exec();
+
+		if (!updatedUser) {
+			throw new NotFoundException(
+				`You are trying to update a user you do not have access to'`,
+			);
+		}
 
 		return updatedUser;
 	}

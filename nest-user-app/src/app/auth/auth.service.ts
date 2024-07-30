@@ -10,7 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { logonAuthDto } from './dto/logon-auth.dto.js';
 import { User, UserDocument } from '../user/schema/user.schema.js';
 //TYPES
-import type { ILogonReturnData } from './types/types.js';
+import type { ILogonReturnData, ITokenPayload } from './types/types.js';
 
 @Injectable()
 export class AuthService {
@@ -35,7 +35,10 @@ export class AuthService {
 			throw new UnauthorizedException('Invalid password');
 		}
 
-		const payload = { email: findedUser.email, username: findedUser.name };
+		const payload: ITokenPayload = {
+			email: findedUser.email,
+			username: findedUser.name,
+		};
 		const token = await this.jwtService.signAsync(payload);
 
 		return {
