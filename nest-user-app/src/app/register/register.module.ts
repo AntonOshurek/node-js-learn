@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
+//DB
 import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigModule } from '@nestjs/config';
 //CONTROLLER
 import { RegisterController } from './register.controller.js';
 //SERVICE

@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UserRegistrationDto } from './dto/create-register.dto.js';
-import { User, UserDocument } from '../user/schema/user.schema.js';
-import { genSaltSync, hash } from 'bcrypt';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+//SERVICE
 import { UserService } from '../user/user.service.js';
+//DATA
+import { User, UserDocument } from '../user/schema/user.schema.js';
+import { UserRegistrationDto } from './dto/create-register.dto.js';
 
 @Injectable()
 export class RegisterService {
