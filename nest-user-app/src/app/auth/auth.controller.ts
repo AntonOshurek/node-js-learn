@@ -25,11 +25,8 @@ export class AuthController {
 	@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 	async logon(
 		@Body() credentials: logonAuthDto,
-		@Ip() ip,
 		@Res({ passthrough: true }) res: Response,
 	): Promise<ILogonReturnData> {
-		console.log(`logon from ip -${ip}`);
-
 		const logonResult = await this.authService.logon(credentials);
 
 		res.cookie('access_token', logonResult.access_token, {

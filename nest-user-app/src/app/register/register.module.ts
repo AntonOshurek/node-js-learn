@@ -8,11 +8,13 @@ import { RegisterService } from './register.service.js';
 import { UserModule } from '../user/user.module.js';
 //DATA
 import { User, UserSchema } from '../user/schema/user.schema.js';
+import { AuthModule } from '../auth/auth.module.js';
 
 @Module({
 	imports: [
 		MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
 		UserModule,
+		AuthModule,
 	],
 	controllers: [RegisterController],
 	providers: [RegisterService],
