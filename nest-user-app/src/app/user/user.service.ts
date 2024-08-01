@@ -29,6 +29,16 @@ export class UserService {
 		}
 	}
 
+	async getUser(userFromTokenPayload: ITokenPayload): Promise<userDTO> {
+		const user = await this.getUserByEmail(userFromTokenPayload.email);
+
+		if (!user) {
+			throw new NotFoundException(`User not found`);
+		}
+
+		return user;
+	}
+
 	async getUserById(
 		id: string,
 		userFromTokenPayload: ITokenPayload,
@@ -76,7 +86,7 @@ export class UserService {
 
 		if (!updatedUser) {
 			throw new NotFoundException(
-				`You are attempting to update another user, which you do not have access to.`,
+				`You are attempting to update another user, which you do not have access to. Plese, check Your credentials for this operation`,
 			);
 		}
 
