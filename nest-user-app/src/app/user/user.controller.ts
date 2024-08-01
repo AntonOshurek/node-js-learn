@@ -2,9 +2,7 @@ import {
 	Body,
 	Controller,
 	Get,
-	HttpCode,
 	Param,
-	Post,
 	Put,
 	Req,
 	UseGuards,
@@ -32,8 +30,13 @@ export class UserController {
 	}
 
 	@Get(':id')
-	async getUserById(@Param('id') id: string): Promise<userDTO> {
-		return await this.userService.getUserById(id);
+	async getUserById(
+		@Param('id') id: string,
+		@Req() req: Request,
+	): Promise<userDTO> {
+		const userFromTokenPayload: ITokenPayload = req['user'];
+
+		return await this.userService.getUserById(id, userFromTokenPayload);
 	}
 
 	@Put(':id')
@@ -44,6 +47,7 @@ export class UserController {
 		@Req() req: Request,
 	): Promise<Partial<userDTO>> {
 		const userFromTokenPayload: ITokenPayload = req['user'];
+
 		return this.userService.updateUserById(
 			id,
 			updateData,

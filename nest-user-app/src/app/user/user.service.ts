@@ -1,4 +1,5 @@
 import {
+	ForbiddenException,
 	Injectable,
 	InternalServerErrorException,
 	NotFoundException,
@@ -28,17 +29,30 @@ export class UserService {
 		}
 	}
 
-	async getUserById(id: string): Promise<userDTO> {
+	async getUserById(
+		id: string,
+		userFromTokenPayload: ITokenPayload,
+	): Promise<userDTO> {
 		try {
-			const user = await this.userModel.findById(id).exec();
+			const user = await this.userModel.findById(id);
+
+			if (user.email !== userFromTokenPayload.email) {
+				throw new ForbiddenException('You do not have access to this user');
+			}
+
 			if (!user) {
 				throw new NotFoundException(`User with ID ${id} not found`);
 			}
+
 			return user;
 		} catch (error) {
-			if (error instanceof NotFoundException) {
+			if (
+				error instanceof NotFoundException ||
+				error instanceof ForbiddenException
+			) {
 				throw error;
 			}
+
 			throw new InternalServerErrorException('Failed to fetch user by id');
 		}
 	}
@@ -78,6 +92,13 @@ export class UserService {
 
 	async getUserByEmail(email: string): Promise<UserDocument | null> {
 		return this.userModel.findOne({ email }).exec();
+	}
+
+	async getUserByEmailAndId(
+		id: string,
+		email: string,
+	): Promise<UserDocument | null> {
+		return this.userModel.findOne({ _id: id, email }).exec();
 	}
 
 	async getUserByEmailWithPassword(
