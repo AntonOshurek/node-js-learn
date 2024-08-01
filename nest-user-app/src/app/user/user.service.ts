@@ -79,4 +79,10 @@ export class UserService {
 	async getUserByEmail(email: string): Promise<UserDocument | null> {
 		return this.userModel.findOne({ email }).exec();
 	}
+
+	async getUserByEmailWithPassword(
+		email: string,
+	): Promise<UserDocument | null> {
+		return this.userModel.findOne({ email }).select('+password').exec();
+	}
 }

@@ -16,13 +16,14 @@ import type { ILogonReturnData, ITokenPayload } from './types/types.js';
 @Injectable()
 export class AuthService {
 	constructor(
-		@InjectModel(User.name) private userModel: Model<UserDocument>,
 		private readonly jwtService: JwtService,
 		private readonly userService: UserService,
 	) {}
 
 	async logon(credentials: logonAuthDto): Promise<ILogonReturnData> {
-		const findedUser = await this.userService.getUserByEmail(credentials.email);
+		const findedUser = await this.userService.getUserByEmailWithPassword(
+			credentials.email,
+		);
 
 		if (!findedUser) {
 			throw new UnauthorizedException('Invalid credentials');
@@ -48,4 +49,6 @@ export class AuthService {
 			user_name: findedUser.name,
 		};
 	}
+
+	async getToken() {}
 }
