@@ -14,8 +14,6 @@ import {
 //DATA
 import { userDTO } from './dto/user.dto.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
-import { CreateUserDto } from './dto/create-user.dto.js';
-import { User } from './schema/user.schema.js';
 //GUARDS
 import { AuthGuard } from '../auth/guards/authGuard.js';
 //SERVICES
@@ -37,13 +35,6 @@ export class UserController {
 	@Get(':id')
 	async getUserById(@Param('id') id: string): Promise<userDTO> {
 		return await this.userService.getUserById(id);
-	}
-
-	@Post()
-	@HttpCode(201)
-	@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-	async createUser(@Body() newUser: CreateUserDto): Promise<User> {
-		return await this.userService.createUser(newUser);
 	}
 
 	@UseGuards(AuthGuard)

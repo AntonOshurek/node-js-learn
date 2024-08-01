@@ -1,6 +1,4 @@
 import {
-	HttpException,
-	HttpStatus,
 	Injectable,
 	InternalServerErrorException,
 	NotFoundException,
@@ -14,7 +12,6 @@ import { genSaltSync, hash } from 'bcrypt';
 //DATA
 import { userDTO } from './dto/user.dto.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
-import { CreateUserDto } from './dto/create-user.dto.js';
 //TYPES
 import type { ITokenPayload } from '../auth/types/types.js';
 
@@ -72,24 +69,6 @@ export class UserService {
 		return updatedUser;
 	}
 
-	async createUser(newUser: CreateUserDto): Promise<User> {
-		const isEmailAlredyIsset = await this.getUserByEmail(newUser.email);
-
-		if (isEmailAlredyIsset !== null) {
-			throw new HttpException(
-				'User with this email alredy exist',
-				HttpStatus.CONFLICT,
-			);
-		}
-
-		const createdUser = new this.userModel({
-			...newUser,
-			password: await this.generateHash(newUser.password),
-		});
-
-		return createdUser.save();
-	}
-
 	async generateHash(password: string): Promise<string> {
 		const salt = genSaltSync(10);
 		const hashpass = await hash(password, salt);
@@ -97,7 +76,7 @@ export class UserService {
 		return hashpass;
 	}
 
-	private async getUserByEmail(email: string): Promise<UserDocument | null> {
+	async getUserByEmail(email: string): Promise<UserDocument | null> {
 		return this.userModel.findOne({ email }).exec();
 	}
 }
