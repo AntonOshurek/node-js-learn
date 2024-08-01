@@ -27,11 +27,13 @@ import type { ITokenPayload } from '../auth/types/types.js';
 export class UserController {
 	constructor(private readonly userService: UserService) {}
 
+	@UseGuards(AuthGuard)
 	@Get('all')
 	async getAll(): Promise<userDTO[]> {
 		return await this.userService.getAllUsers();
 	}
 
+	@UseGuards(AuthGuard)
 	@Get(':id')
 	async getUserById(@Param('id') id: string): Promise<userDTO> {
 		return await this.userService.getUserById(id);

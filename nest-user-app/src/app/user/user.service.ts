@@ -55,10 +55,6 @@ export class UserService {
 			newUserData.password = await this.generateHash(newUserData.password);
 		}
 
-		// const updatedUser = await this.userModel
-		// 	.findByIdAndUpdate(id, newUserData, { new: true, runValidators: true })
-		// 	.exec();
-
 		const updatedUser = await this.userModel
 			.findOneAndUpdate(
 				{ _id: id, email: userFromTokenPayload.email },
@@ -69,7 +65,7 @@ export class UserService {
 
 		if (!updatedUser) {
 			throw new NotFoundException(
-				`You are trying to update a user you do not have access to'`,
+				`You are attempting to update another user, which you do not have access to.`,
 			);
 		}
 
