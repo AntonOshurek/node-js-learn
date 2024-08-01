@@ -29,7 +29,7 @@ export class UserController {
 		return await this.userService.getAllUsers();
 	}
 
-	@Get('')
+	@Get()
 	async getUser(@Req() req: Request): Promise<userDTO> {
 		const userFromTokenPayload: ITokenPayload = req['user'];
 
