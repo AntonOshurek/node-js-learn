@@ -1,12 +1,15 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+//MIDLEWARE
 import { HostMiddleware } from '../middleware/host.midleware.js';
 import { LoggerMiddleware } from '../middleware/logger.midleware.js';
-import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UserModule } from './user/user.module.js';
-import { ProductModule } from './product/product.module.js';
-import { AuthModule } from './auth/auth.module.js';
+//MODULES
 import { JwtConfigModule } from '../utils-modules/jwt/jwt.module.js';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ProductModule } from './product/product.module.js';
+import { UserModule } from './user/user.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { RegisterModule } from './register/register.module.js';
 
 @Module({
 	imports: [
@@ -24,6 +27,7 @@ import { JwtConfigModule } from '../utils-modules/jwt/jwt.module.js';
 		ProductModule,
 		AuthModule,
 		JwtConfigModule,
+		RegisterModule,
 	],
 	controllers: [],
 	providers: [],

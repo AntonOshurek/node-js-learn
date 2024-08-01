@@ -1,6 +1,5 @@
 import {
-	HttpException,
-	HttpStatus,
+	ForbiddenException,
 	Injectable,
 	InternalServerErrorException,
 	NotFoundException,
@@ -14,7 +13,6 @@ import { genSaltSync, hash } from 'bcrypt';
 //DATA
 import { userDTO } from './dto/user.dto.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
-import { CreateUserDto } from './dto/create-user.dto.js';
 //TYPES
 import type { ITokenPayload } from '../auth/types/types.js';
 
@@ -31,17 +29,40 @@ export class UserService {
 		}
 	}
 
-	async getUserById(id: string): Promise<userDTO> {
+	async getUser(userFromTokenPayload: ITokenPayload): Promise<userDTO> {
+		const user = await this.getUserByEmail(userFromTokenPayload.email);
+
+		if (!user) {
+			throw new NotFoundException(`User not found`);
+		}
+
+		return user;
+	}
+
+	async getUserById(
+		id: string,
+		userFromTokenPayload: ITokenPayload,
+	): Promise<userDTO> {
 		try {
-			const user = await this.userModel.findById(id).exec();
+			const user = await this.userModel.findById(id);
+
+			if (user.email !== userFromTokenPayload.email) {
+				throw new ForbiddenException('You do not have access to this user');
+			}
+
 			if (!user) {
 				throw new NotFoundException(`User with ID ${id} not found`);
 			}
+
 			return user;
 		} catch (error) {
-			if (error instanceof NotFoundException) {
+			if (
+				error instanceof NotFoundException ||
+				error instanceof ForbiddenException
+			) {
 				throw error;
 			}
+
 			throw new InternalServerErrorException('Failed to fetch user by id');
 		}
 	}
@@ -55,10 +76,6 @@ export class UserService {
 			newUserData.password = await this.generateHash(newUserData.password);
 		}
 
-		// const updatedUser = await this.userModel
-		// 	.findByIdAndUpdate(id, newUserData, { new: true, runValidators: true })
-		// 	.exec();
-
 		const updatedUser = await this.userModel
 			.findOneAndUpdate(
 				{ _id: id, email: userFromTokenPayload.email },
@@ -69,29 +86,11 @@ export class UserService {
 
 		if (!updatedUser) {
 			throw new NotFoundException(
-				`You are trying to update a user you do not have access to'`,
+				`You are attempting to update another user, which you do not have access to. Plese, check Your credentials for this operation`,
 			);
 		}
 
 		return updatedUser;
-	}
-
-	async createUser(newUser: CreateUserDto): Promise<User> {
-		const isEmailAlredyIsset = await this.getUserByEmail(newUser.email);
-
-		if (isEmailAlredyIsset !== null) {
-			throw new HttpException(
-				'User with this email alredy exist',
-				HttpStatus.CONFLICT,
-			);
-		}
-
-		const createdUser = new this.userModel({
-			...newUser,
-			password: await this.generateHash(newUser.password),
-		});
-
-		return createdUser.save();
 	}
 
 	async generateHash(password: string): Promise<string> {
@@ -101,7 +100,20 @@ export class UserService {
 		return hashpass;
 	}
 
-	private async getUserByEmail(email: string): Promise<UserDocument | null> {
+	async getUserByEmail(email: string): Promise<UserDocument | null> {
 		return this.userModel.findOne({ email }).exec();
+	}
+
+	async getUserByEmailAndId(
+		id: string,
+		email: string,
+	): Promise<UserDocument | null> {
+		return this.userModel.findOne({ _id: id, email }).exec();
+	}
+
+	async getUserByEmailWithPassword(
+		email: string,
+	): Promise<UserDocument | null> {
+		return this.userModel.findOne({ email }).select('+password').exec();
 	}
 }
