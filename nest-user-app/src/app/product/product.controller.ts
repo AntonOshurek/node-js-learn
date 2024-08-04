@@ -27,7 +27,6 @@ export class ProductController {
 	@Get()
 	findAll(@Req() req: Request) {
 		const user = (req as any).user;
-		console.log(user);
 		return this.productService.findAll();
 	}
 
