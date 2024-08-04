@@ -12,7 +12,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 				const secret = configService.get<string>('SECRET');
 				return {
 					secret: secret,
-					signOptions: { expiresIn: '60m' },
+					signOptions: { expiresIn: '60m', algorithm: 'HS256' },
+					audience: '',
+					issuer: '',
 				};
 			},
 		}),
