@@ -1,6 +1,12 @@
-import { IsString, IsInt } from 'class-validator';
+import {
+	IsString,
+	IsArray,
+	ArrayNotEmpty,
+	ArrayUnique,
+	IsEnum,
+} from 'class-validator';
 import type { Types } from 'mongoose';
-import { Role } from '../roles/role.enum.js';
+import { Group } from '../groups/groups.enum.js';
 
 export class userDTO {
 	@IsString()
@@ -12,8 +18,11 @@ export class userDTO {
 	@IsString()
 	email: string;
 
-	@IsString()
-	role: Role[];
+	@IsArray()
+	@ArrayNotEmpty()
+	@ArrayUnique()
+	@IsEnum(Group, { each: true })
+	groups: Group[];
 
 	@IsString()
 	password: string;

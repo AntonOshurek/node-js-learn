@@ -18,18 +18,18 @@ import { AuthGuard } from '../auth/guards/authGuard.js';
 import { UserService } from './user.service.js';
 //TYPES
 import type { ITokenPayload } from '../auth/types/types.js';
-import { Roles } from './decorators/roles.decorator.js';
-import { Role } from './roles/role.enum.js';
-import { RolesGuard } from './guards/roles.guard.js';
 
-@UseGuards(AuthGuard)
+import { GroupGuard } from './guards/group.guard.js';
+import { Groups } from './decorators/groups.decorator.js';
+import { Group } from './groups/groups.enum.js';
+
+@Groups(Group.Managers)
+@UseGuards(AuthGuard, GroupGuard)
 @Controller('user')
 export class UserController {
 	constructor(private readonly userService: UserService) {}
 
 	@Get('all')
-	@Roles(Role.Admin)
-	@UseGuards(RolesGuard)
 	async getAll(): Promise<userDTO[]> {
 		return await this.userService.getAllUsers();
 	}

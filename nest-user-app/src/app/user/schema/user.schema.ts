@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { Role } from '../roles/role.enum.js';
+import { Group } from '../groups/groups.enum.js';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -12,8 +12,8 @@ export class User {
 	@Prop()
 	email: string;
 
-	@Prop()
-	role: Role[];
+	@Prop({ type: [String], enum: Group, required: true })
+	groups: Group[];
 
 	@Prop({ select: false })
 	password: string;

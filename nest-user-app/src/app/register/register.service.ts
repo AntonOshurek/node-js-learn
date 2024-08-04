@@ -55,7 +55,7 @@ export class RegisterService {
 		const token = await this.authService.getToken({
 			email: createdUser.email,
 			username: createdUser.userName,
-			role: createdUser.role,
+			groups: createdUser.groups,
 		});
 
 		const response = {

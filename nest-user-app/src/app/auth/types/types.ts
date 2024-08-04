@@ -1,14 +1,15 @@
-import { Role } from 'src/app/user/roles/role.enum.js';
+import { Group } from 'src/app/user/groups/groups.enum.js';
 
 export interface ILogonReturnData {
 	access_token: string;
-	user_name: string;
+	userName: string;
+	groups: Group[];
 }
 
 export interface ITokenPayload {
 	username: string;
 	email: string;
-	role: Role[];
+	groups: Group[];
 }
 
 export interface IGetTokenReturnData {
