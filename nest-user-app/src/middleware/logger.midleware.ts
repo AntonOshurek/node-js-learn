@@ -11,7 +11,7 @@ export class LoggerMiddleware implements NestMiddleware {
 
 		console.log(
 			`
-${chalk.green.bold('[LOG]')} ${chalk.white.bgBlack(timestamp)} ${chalk.bold.yellowBright('New Request')}
+${chalk.green.bold('[LOG] 🚀')} ${chalk.white.bgBlack(timestamp)} ${chalk.bold.yellowBright('New Request')}
 ${chalk.green('Method:')} ${chalk.blue.bold(method)}
 ${chalk.green('URL:')} ${chalk.blue.bold(originalUrl)}
 ${chalk.green('Host:')} ${chalk.blue.bold(hostname)}
@@ -27,7 +27,7 @@ ${chalk.green('User-Agent:')} ${chalk.blue.bold(headers['user-agent'] || '')}
 
 			console.log(
 				`
-${chalk.green.bold('[LOG]')} ${chalk.white.bgBlack(timestamp)} ${chalk.bold.yellowBright('Request Completed')}
+${chalk.green.bold('[LOG] 🏁')} ${chalk.white.bgBlack(timestamp)} ${chalk.bold.yellowBright('Request Completed')}
 ${chalk.green('Method:')} ${chalk.blue.bold(method)}
 ${chalk.green('URL:')} ${chalk.blue.bold(originalUrl)}
 ${chalk.green('Host:')} ${chalk.blue.bold(hostname)}

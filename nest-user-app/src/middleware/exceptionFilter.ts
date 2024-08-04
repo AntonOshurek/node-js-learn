@@ -37,7 +37,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 		}
 
 		const logMessage = `
-${chalk.red.bold('[ERROR]')} ${chalk.white.bgBlack(timestamp)}
+${chalk.red.bold('[ERROR] 👿')} ${chalk.white.bgBlack(timestamp)}
 ${chalk.red(`Status: ${status}`)}
 ${chalk.red(`Method: ${request.method}`)}
 ${chalk.red(`URL: ${request.url}`)}
