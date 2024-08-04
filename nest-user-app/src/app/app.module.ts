@@ -36,7 +36,7 @@ import { RegisterModule } from './register/register.module.js';
 export class AppModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer
-			.apply(LoggerMiddleware, HostMiddleware)
+			.apply(HostMiddleware)
 			.forRoutes({ path: '*', method: RequestMethod.ALL }); // Применяем middleware ко всем маршрутам
 	}
 }

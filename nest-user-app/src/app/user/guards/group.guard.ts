@@ -16,11 +16,7 @@ export class GroupGuard implements CanActivate {
 			return true;
 		}
 
-		console.log(requiredRoles);
-
 		const { user } = context.switchToHttp().getRequest();
-
-		console.log(user.groups);
 
 		return requiredRoles.some((group) => user.groups?.includes(group));
 	}
