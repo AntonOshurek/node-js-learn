@@ -4,7 +4,6 @@ import {
 	Body,
 	UsePipes,
 	ValidationPipe,
-	Ip,
 	Res,
 	HttpCode,
 } from '@nestjs/common';

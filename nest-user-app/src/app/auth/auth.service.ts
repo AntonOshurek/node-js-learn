@@ -40,13 +40,14 @@ export class AuthService {
 
 		const payload: ITokenPayload = {
 			email: findedUser.email,
-			username: findedUser.name,
+			username: findedUser.userName,
+			role: findedUser.role,
 		};
 		const token = await this.jwtService.signAsync(payload);
 
 		return {
 			access_token: token,
-			user_name: findedUser.name,
+			user_name: findedUser.userName,
 		};
 	}
 
