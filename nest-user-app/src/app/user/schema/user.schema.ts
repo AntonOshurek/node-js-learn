@@ -1,20 +1,19 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { genSalt } from 'bcrypt';
-import { hash } from 'crypto';
 import { HydratedDocument, Types } from 'mongoose';
+import { Group } from '../groups/groups.enum.js';
 
 export type UserDocument = HydratedDocument<User>;
 
 @Schema({ collection: 'users' })
 export class User {
 	@Prop()
-	name: string;
-
-	@Prop()
-	age: number;
+	userName: string;
 
 	@Prop()
 	email: string;
+
+	@Prop({ type: [String], enum: Group, required: true })
+	groups: Group[];
 
 	@Prop({ select: false })
 	password: string;

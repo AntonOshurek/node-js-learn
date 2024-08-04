@@ -19,7 +19,12 @@ import { UserService } from './user.service.js';
 //TYPES
 import type { ITokenPayload } from '../auth/types/types.js';
 
-@UseGuards(AuthGuard)
+import { GroupGuard } from './guards/group.guard.js';
+import { Groups } from './decorators/groups.decorator.js';
+import { Group } from './groups/groups.enum.js';
+
+@Groups(Group.Managers)
+@UseGuards(AuthGuard, GroupGuard)
 @Controller('user')
 export class UserController {
 	constructor(private readonly userService: UserService) {}

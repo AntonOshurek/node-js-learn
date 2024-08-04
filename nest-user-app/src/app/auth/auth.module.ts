@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 //DB
 import { MongooseModule } from '@nestjs/mongoose';
 //MODULE
@@ -17,6 +18,7 @@ import { User, UserSchema } from '../user/schema/user.schema.js';
 		MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
 		JwtConfigModule,
 		UserModule,
+		ConfigModule,
 	],
 	controllers: [AuthController],
 	providers: [AuthService],

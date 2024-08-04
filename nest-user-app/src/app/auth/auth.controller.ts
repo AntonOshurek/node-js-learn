@@ -4,10 +4,10 @@ import {
 	Body,
 	UsePipes,
 	ValidationPipe,
-	Ip,
 	Res,
 	HttpCode,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 //SERVICES
 import { AuthService } from './auth.service.js';
@@ -18,7 +18,10 @@ import type { ILogonReturnData } from './types/types.js';
 
 @Controller('auth')
 export class AuthController {
-	constructor(private readonly authService: AuthService) {}
+	constructor(
+		private readonly authService: AuthService,
+		private readonly configService: ConfigService,
+	) {}
 
 	@Post('logon')
 	@HttpCode(200)
@@ -27,11 +30,13 @@ export class AuthController {
 		@Body() credentials: logonAuthDto,
 		@Res({ passthrough: true }) res: Response,
 	): Promise<ILogonReturnData> {
+		const isProduction =
+			this.configService.get<string>('NODE_ENV') === 'production';
 		const logonResult = await this.authService.logon(credentials);
 
 		res.cookie('access_token', logonResult.access_token, {
 			httpOnly: true,
-			secure: process.env.NODE_ENV === 'production',
+			secure: isProduction,
 			maxAge: 3600000,
 		});
 
