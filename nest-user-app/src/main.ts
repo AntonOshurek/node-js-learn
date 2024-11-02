@@ -6,15 +6,15 @@ import { AllExceptionsFilter } from './middleware/exceptionFilter.js';
 import { LoggerMiddleware } from './middleware/logger.midleware.js';
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule);
 
-	app.enableCors();
-	app.setGlobalPrefix('api');
-	app.use(helmet());
-	app.use(cookieParser());
-	app.useGlobalFilters(new AllExceptionsFilter());
-	app.use(new LoggerMiddleware().use);
+  app.enableCors();
+  app.setGlobalPrefix('api');
+  app.use(helmet());
+  app.use(cookieParser());
+  app.useGlobalFilters(new AllExceptionsFilter());
+  app.use(new LoggerMiddleware().use);
 
-	await app.listen(3000);
+  await app.listen(3000);
 }
 bootstrap();
