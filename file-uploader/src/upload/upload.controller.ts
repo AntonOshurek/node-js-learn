@@ -10,6 +10,8 @@ import {
   MaxFileSizeValidator,
   FileTypeValidator,
   Res,
+  HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
 //INTERCEPTORS
@@ -33,8 +35,23 @@ export class UploadController {
       }),
     )
     file: Express.Multer.File,
+    @Res() res: Response,
   ) {
-    await this.uploadService.uploadFile(file);
+    try {
+      await this.uploadService.uploadFile(file);
+
+      return res.status(HttpStatus.CREATED).json({
+        message: 'Файл успешно загружен',
+        fileName: file.originalname,
+      });
+    } catch (error) {
+      console.error('Ошибка при загрузке файла:', error.message);
+
+      throw new HttpException(
+        'Не удалось загрузить файл',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Get(':id')
@@ -44,14 +61,27 @@ export class UploadController {
     res.set({
       'Content-Type': 'application/octet-stream',
       'Content-Disposition': `attachment; filename="${id}"`,
-      'Access-Control-Allow-Origin': 'http://127.0.0.1:5500',
     });
 
     fileStream.pipe(res);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.uploadService.remove(id);
+  async remove(@Param('id') id: string) {
+    try {
+      await this.uploadService.remove(id);
+      return {
+        statusCode: HttpStatus.OK,
+        message: `Файл с id ${id} успешно удален`,
+      };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error; // Перехватываем ошибку, если она выброшена в сервисе
+      }
+      throw new HttpException(
+        'Не удалось удалить файл по техническим причинам',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

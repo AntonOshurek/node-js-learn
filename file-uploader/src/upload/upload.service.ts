@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   DeleteObjectCommand,
@@ -17,15 +17,21 @@ export class UploadService {
   constructor(private readonly configService: ConfigService) {}
 
   async uploadFile(file: Express.Multer.File) {
-    const uploadResult = await this.s3Client.send(
-      new PutObjectCommand({
-        Bucket: 'fenix-upload-test',
-        Key: file.originalname,
-        Body: file.buffer,
-      }),
-    );
-    console.log(file.originalname);
-    console.log(uploadResult);
+    try {
+      await this.s3Client.send(
+        new PutObjectCommand({
+          Bucket: 'fenix-upload-test',
+          Key: file.originalname,
+          Body: file.buffer,
+        }),
+      );
+    } catch (error) {
+      console.error(`Ошибка при загрузке файла в S3: ${error.message}`);
+      throw new HttpException(
+        'Не удалось загрузить файл',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async findOne(id: string): Promise<Readable> {
@@ -51,10 +57,12 @@ export class UploadService {
 
     try {
       await this.s3Client.send(command);
-      console.log(`Файл с ключом ${id} успешно удален из S3`);
     } catch (error) {
       console.error(`Ошибка при удалении файла из S3: ${error.message}`);
-      throw new Error('Не удалось удалить файл');
+      throw new HttpException(
+        'Не удалось удалить файл',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
