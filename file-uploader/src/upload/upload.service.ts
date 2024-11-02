@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateUploadDto } from './dto/update-upload.dto';
 import { ConfigService } from '@nestjs/config';
 import {
+  DeleteObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
   S3Client,
@@ -28,10 +28,6 @@ export class UploadService {
     console.log(uploadResult);
   }
 
-  findAll() {
-    return `This action returns all upload`;
-  }
-
   async findOne(id: string): Promise<Readable> {
     const command = new GetObjectCommand({
       Bucket: 'fenix-upload-test',
@@ -47,12 +43,18 @@ export class UploadService {
     }
   }
 
-  update(id: number, updateUploadDto: UpdateUploadDto) {
-    console.log(updateUploadDto);
-    return `This action updates a #${id} upload`;
-  }
+  async remove(id: string) {
+    const command = new DeleteObjectCommand({
+      Bucket: 'fenix-upload-test',
+      Key: id,
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} upload`;
+    try {
+      await this.s3Client.send(command);
+      console.log(`Файл с ключом ${id} успешно удален из S3`);
+    } catch (error) {
+      console.error(`Ошибка при удалении файла из S3: ${error.message}`);
+      throw new Error('Не удалось удалить файл');
+    }
   }
 }

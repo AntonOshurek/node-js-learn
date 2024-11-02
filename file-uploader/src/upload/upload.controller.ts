@@ -2,8 +2,6 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
   Param,
   Delete,
   UseInterceptors,
@@ -18,8 +16,6 @@ import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 //SERVICES
 import { UploadService } from './upload.service';
-//DTO
-import { UpdateUploadDto } from './dto/update-upload.dto';
 
 @Controller('upload')
 export class UploadController {
@@ -41,11 +37,6 @@ export class UploadController {
     await this.uploadService.uploadFile(file);
   }
 
-  @Get()
-  findAll() {
-    return this.uploadService.findAll();
-  }
-
   @Get(':id')
   async findOne(@Param('id') id: string, @Res() res: Response) {
     const fileStream = await this.uploadService.findOne(id);
@@ -59,13 +50,8 @@ export class UploadController {
     fileStream.pipe(res);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUploadDto: UpdateUploadDto) {
-    return this.uploadService.update(+id, updateUploadDto);
-  }
-
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.uploadService.remove(+id);
+    return this.uploadService.remove(id);
   }
 }
