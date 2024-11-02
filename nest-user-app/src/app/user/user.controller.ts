@@ -1,13 +1,13 @@
 import {
-	Body,
-	Controller,
-	Get,
-	Param,
-	Put,
-	Req,
-	UseGuards,
-	UsePipes,
-	ValidationPipe,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Put,
+  Req,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 //DATA
 import { userDTO } from './dto/user.dto.js';
@@ -27,43 +27,43 @@ import { Group } from './groups/groups.enum.js';
 @UseGuards(AuthGuard, GroupGuard)
 @Controller('user')
 export class UserController {
-	constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
-	@Get('all')
-	async getAll(): Promise<userDTO[]> {
-		return await this.userService.getAllUsers();
-	}
+  @Get('all')
+  async getAll(): Promise<userDTO[]> {
+    return await this.userService.getAllUsers();
+  }
 
-	@Get()
-	async getUser(@Req() req: Request): Promise<userDTO> {
-		const userFromTokenPayload: ITokenPayload = req['user'];
+  @Get()
+  async getUser(@Req() req: Request): Promise<userDTO> {
+    const userFromTokenPayload: ITokenPayload = req['user'];
 
-		return await this.userService.getUser(userFromTokenPayload);
-	}
+    return await this.userService.getUser(userFromTokenPayload);
+  }
 
-	@Get(':id')
-	async getUserById(
-		@Param('id') id: string,
-		@Req() req: Request,
-	): Promise<userDTO> {
-		const userFromTokenPayload: ITokenPayload = req['user'];
+  @Get(':id')
+  async getUserById(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<userDTO> {
+    const userFromTokenPayload: ITokenPayload = req['user'];
 
-		return await this.userService.getUserById(id, userFromTokenPayload);
-	}
+    return await this.userService.getUserById(id, userFromTokenPayload);
+  }
 
-	@Put(':id')
-	@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-	async updateUserById(
-		@Param('id') id: string,
-		@Body() updateData: UpdateUserDto,
-		@Req() req: Request,
-	): Promise<Partial<userDTO>> {
-		const userFromTokenPayload: ITokenPayload = req['user'];
+  @Put(':id')
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  async updateUserById(
+    @Param('id') id: string,
+    @Body() updateData: UpdateUserDto,
+    @Req() req: Request,
+  ): Promise<Partial<userDTO>> {
+    const userFromTokenPayload: ITokenPayload = req['user'];
 
-		return this.userService.updateUserById(
-			id,
-			updateData,
-			userFromTokenPayload,
-		);
-	}
+    return this.userService.updateUserById(
+      id,
+      updateData,
+      userFromTokenPayload,
+    );
+  }
 }
