@@ -1,5 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+//SERVICES
+import { JwtService } from './jwt.service';
 //LIBS
 import { JwtModule } from '@nestjs/jwt';
 
@@ -21,7 +23,9 @@ import { JwtModule } from '@nestjs/jwt';
         issuer: configService.get<string>('JWT_ISSUER'),
       }),
     }),
+    ConfigModule,
   ],
-  exports: [JwtModule],
+  exports: [JwtModule, JwtService],
+  providers: [JwtService],
 })
 export class JwtConfigModule {}

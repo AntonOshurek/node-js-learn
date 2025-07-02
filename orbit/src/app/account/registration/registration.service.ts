@@ -1,18 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 //SERVICES
-import { JwtService } from '@nestjs/jwt';
+import { JwtService } from '../jwt/@registration';
 //DTO
 import { CreateUserDto, UserService } from '../user/@registration';
 import { RegistrationResponseDto } from './dto/registration.dto';
-//TYPES
-import type { IGetTokenReturnData, ITokenPayload } from './model/auth.model';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class RegistrationService {
   constructor(
     private readonly userService: UserService,
-    private readonly jwtService: JwtService,
+    private readonly JwtService: JwtService,
   ) {}
 
   async create(
@@ -40,7 +38,7 @@ export class RegistrationService {
 
     const createdUser = await this.userService.create(preparedUser);
 
-    const token = await this.generateToken({
+    const token = await this.JwtService.generateToken({
       sub: createdUser._id.toString(),
       username: createdUser.userName,
     });
@@ -49,15 +47,5 @@ export class RegistrationService {
       ...createdUser.toObject(),
       access_token: token.access_token,
     });
-  }
-
-  async generateToken(
-    tokenPayload: ITokenPayload,
-  ): Promise<IGetTokenReturnData> {
-    const token = await this.jwtService.signAsync(tokenPayload);
-
-    return {
-      access_token: token,
-    };
   }
 }
