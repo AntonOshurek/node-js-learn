@@ -12,7 +12,9 @@ export const validationSchema = Joi.object({
   MONGODB_DEFAULT_DB: Joi.string().required(),
 
   JWT_SECRET: Joi.string().required(),
+  JWT_REFRESH_SECRET: Joi.string().required(),
   JWT_EXPIRES_IN: Joi.string().default('60m'),
+  JWT_REFRESH_EXPIRES_IN: Joi.string().default('6d'),
   JWT_ALGORITHM: Joi.string().default('HS256'),
   JWT_AUDIENCE: Joi.string().allow(''),
   JWT_ISSUER: Joi.string().allow(''),
