@@ -23,6 +23,7 @@ export const UserSchema = SchemaFactory.createForClass(User);
 UserSchema.set('toObject', {
   transform: (doc, ret) => {
     delete ret.password;
+    delete ret.__v;
     return ret;
   },
 });
@@ -30,6 +31,7 @@ UserSchema.set('toObject', {
 UserSchema.set('toJSON', {
   transform: (doc, ret) => {
     delete ret.password;
+    delete ret.__v;
     return ret;
   },
 });

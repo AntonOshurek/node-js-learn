@@ -4,7 +4,10 @@ import { plainToInstance } from 'class-transformer';
 import { JwtService } from '../security/jwt/jwt.service';
 //DTO
 import { CreateUserDto, UserService } from '../user/@registration';
-import { RegistrationResponseDto } from './dto/registration.dto';
+import {
+  CreateResponseDto,
+  RegistrationResponseDto,
+} from './dto/registration.dto';
 import { CryptoService } from '../security/crypto/crypto.service';
 
 @Injectable()
@@ -17,7 +20,7 @@ export class RegistrationService {
 
   async create(
     createRegistrationDto: CreateUserDto,
-  ): Promise<RegistrationResponseDto> {
+  ): Promise<CreateResponseDto> {
     const existingUser = await this.userService.getUserByEmail(
       createRegistrationDto.email,
     );
@@ -39,15 +42,22 @@ export class RegistrationService {
     };
 
     const createdUser = await this.userService.create(preparedUser);
-
-    const token = await this.JwtService.generateToken({
+    const tokenPayload = {
       sub: createdUser._id.toString(),
       username: createdUser.userName,
-    });
+    };
 
-    return plainToInstance(RegistrationResponseDto, {
-      ...createdUser.toObject(),
-      access_token: token.access_token,
-    });
+    const token = await this.JwtService.generateToken(tokenPayload);
+
+    const refreshToken =
+      await this.JwtService.generateRefreshToken(tokenPayload);
+
+    return {
+      accessToken: token.access_token,
+      refreshToken: refreshToken.access_token,
+      userData: plainToInstance(RegistrationResponseDto, {
+        ...createdUser.toObject(),
+      }),
+    };
   }
 }
