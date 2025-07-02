@@ -11,12 +11,12 @@ import { User, UserSchema } from '../user/schema/user.schema.js';
 import { AuthModule } from '../auth/auth.module.js';
 
 @Module({
-	imports: [
-		MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-		UserModule,
-		AuthModule,
-	],
-	controllers: [RegisterController],
-	providers: [RegisterService],
+  imports: [
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    UserModule,
+    AuthModule,
+  ],
+  controllers: [RegisterController],
+  providers: [RegisterService],
 })
 export class RegisterModule {}

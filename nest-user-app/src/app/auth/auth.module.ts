@@ -14,14 +14,14 @@ import { JwtConfigModule } from '../../utils-modules/jwt/jwt.module.js';
 import { User, UserSchema } from '../user/schema/user.schema.js';
 
 @Module({
-	imports: [
-		MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-		JwtConfigModule,
-		UserModule,
-		ConfigModule,
-	],
-	controllers: [AuthController],
-	providers: [AuthService],
-	exports: [AuthService],
+  imports: [
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    JwtConfigModule,
+    UserModule,
+    ConfigModule,
+  ],
+  controllers: [AuthController],
+  providers: [AuthService],
+  exports: [AuthService],
 })
 export class AuthModule {}
