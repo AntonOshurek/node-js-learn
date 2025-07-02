@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { JwtService as NestJwtService } from '@nestjs/jwt';
-import { IGetTokenReturnData, ITokenPayload } from './model/jwt.model';
 import { ConfigService } from '@nestjs/config';
-import { Request } from 'express';
+import { JwtService as NestJwtService } from '@nestjs/jwt';
+//TYPES
+import type { IGetTokenReturnData, ITokenPayload } from './model/jwt.model';
 
 @Injectable()
 export class JwtService {
