@@ -8,55 +8,55 @@ import { UserService } from '../user/user.service.js';
 import { logonAuthDto } from './dto/logon-auth.dto.js';
 //TYPES
 import type {
-	IGetTokenReturnData,
-	ILogonReturnData,
-	ITokenPayload,
+  IGetTokenReturnData,
+  ILogonReturnData,
+  ITokenPayload,
 } from './types/types.js';
 
 @Injectable()
 export class AuthService {
-	constructor(
-		private readonly jwtService: JwtService,
-		private readonly userService: UserService,
-	) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService,
+  ) {}
 
-	async logon(credentials: logonAuthDto): Promise<ILogonReturnData> {
-		const findedUser = await this.userService.getUserByEmailWithPassword(
-			credentials.email,
-		);
+  async logon(credentials: logonAuthDto): Promise<ILogonReturnData> {
+    const findedUser = await this.userService.getUserByEmailWithPassword(
+      credentials.email,
+    );
 
-		if (!findedUser) {
-			throw new UnauthorizedException('Invalid credentials');
-		}
+    if (!findedUser) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
 
-		const compareResult = await compare(
-			credentials.password,
-			findedUser.password,
-		);
+    const compareResult = await compare(
+      credentials.password,
+      findedUser.password,
+    );
 
-		if (!compareResult) {
-			throw new UnauthorizedException('Invalid password');
-		}
+    if (!compareResult) {
+      throw new UnauthorizedException('Invalid password');
+    }
 
-		const payload: ITokenPayload = {
-			email: findedUser.email,
-			username: findedUser.userName,
-			groups: findedUser.groups,
-		};
-		const token = await this.jwtService.signAsync(payload);
+    const payload: ITokenPayload = {
+      email: findedUser.email,
+      username: findedUser.userName,
+      groups: findedUser.groups,
+    };
+    const token = await this.jwtService.signAsync(payload);
 
-		return {
-			access_token: token,
-			userName: findedUser.userName,
-			groups: findedUser.groups,
-		};
-	}
+    return {
+      access_token: token,
+      userName: findedUser.userName,
+      groups: findedUser.groups,
+    };
+  }
 
-	async getToken(tokenPayload: ITokenPayload): Promise<IGetTokenReturnData> {
-		const token = await this.jwtService.signAsync(tokenPayload);
+  async getToken(tokenPayload: ITokenPayload): Promise<IGetTokenReturnData> {
+    const token = await this.jwtService.signAsync(tokenPayload);
 
-		return {
-			access_token: token,
-		};
-	}
+    return {
+      access_token: token,
+    };
+  }
 }

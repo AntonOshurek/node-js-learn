@@ -7,62 +7,62 @@ import { AuthService } from '../auth/auth.service.js';
 //DATA
 import { User, UserDocument } from '../user/schema/user.schema.js';
 import {
-	UserRegistrationDto,
-	UserRegistrationResponseDto,
+  UserRegistrationDto,
+  UserRegistrationResponseDto,
 } from './dto/create-register.dto.js';
 
 @Injectable()
 export class RegisterService {
-	constructor(
-		@InjectModel(User.name) private userModel: Model<UserDocument>,
-		private readonly userService: UserService,
-		private readonly authService: AuthService,
-	) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
-	async userRegistration(
-		userRegistrationDto: UserRegistrationDto,
-	): Promise<UserRegistrationResponseDto> {
-		const isEmailAlredyIsset = await this.userService.getUserByEmail(
-			userRegistrationDto.email,
-		);
+  async userRegistration(
+    userRegistrationDto: UserRegistrationDto,
+  ): Promise<UserRegistrationResponseDto> {
+    const isEmailAlredyIsset = await this.userService.getUserByEmail(
+      userRegistrationDto.email,
+    );
 
-		if (isEmailAlredyIsset !== null) {
-			throw new HttpException(
-				'User with this email alredy exist',
-				HttpStatus.CONFLICT,
-			);
-		}
+    if (isEmailAlredyIsset !== null) {
+      throw new HttpException(
+        'User with this email alredy exist',
+        HttpStatus.CONFLICT,
+      );
+    }
 
-		const passwordHash = await this.userService.generateHash(
-			userRegistrationDto.password,
-		);
+    const passwordHash = await this.userService.generateHash(
+      userRegistrationDto.password,
+    );
 
-		const createdUser = new this.userModel({
-			...userRegistrationDto,
-			password: passwordHash,
-		});
+    const createdUser = new this.userModel({
+      ...userRegistrationDto,
+      password: passwordHash,
+    });
 
-		let savedUser;
-		try {
-			savedUser = await createdUser.save();
-		} catch (error) {
-			throw new HttpException(
-				'An error occurred while saving the user',
-				HttpStatus.INTERNAL_SERVER_ERROR,
-			);
-		}
+    let savedUser;
+    try {
+      savedUser = await createdUser.save();
+    } catch (error) {
+      throw new HttpException(
+        'An error occurred while saving the user',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
-		const token = await this.authService.getToken({
-			email: createdUser.email,
-			username: createdUser.userName,
-			groups: createdUser.groups,
-		});
+    const token = await this.authService.getToken({
+      email: createdUser.email,
+      username: createdUser.userName,
+      groups: createdUser.groups,
+    });
 
-		const response = {
-			...savedUser.toObject(),
-			access_token: token.access_token,
-		};
+    const response = {
+      ...savedUser.toObject(),
+      access_token: token.access_token,
+    };
 
-		return response;
-	}
+    return response;
+  }
 }
