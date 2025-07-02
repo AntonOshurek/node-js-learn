@@ -18,17 +18,17 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  @UsePipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  )
-  create() {
-    // return this.userService.create(createUserDto);
-  }
+  // @Post()
+  // @UsePipes(
+  //   new ValidationPipe({
+  //     whitelist: true,
+  //     forbidNonWhitelisted: true,
+  //     transform: true,
+  //   }),
+  // )
+  // create() {
+  //   return this.userService.create(createUserDto);
+  // }
 
   @Get()
   findAll() {

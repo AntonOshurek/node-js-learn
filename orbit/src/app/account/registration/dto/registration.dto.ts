@@ -1,6 +1,6 @@
-//ENTITIES
-import { User } from '../../user/@registration';
-
-export class RegistrationResponseDto extends User {
+export class RegistrationResponseDto {
+  _id: string;
+  userName: string;
+  email: string;
   access_token: string;
 }

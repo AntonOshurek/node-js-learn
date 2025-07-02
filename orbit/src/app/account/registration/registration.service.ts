@@ -1,33 +1,28 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 //SERVICES
 import { JwtService } from '@nestjs/jwt';
-//DB
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-//ENTITIES
-import { UserDocument } from '../user/entities/user.entity';
 //DTO
-import { CreateUserDto, User, UserService } from '../user/@registration';
+import { CreateUserDto, UserService } from '../user/@registration';
 import { RegistrationResponseDto } from './dto/registration.dto';
 //TYPES
 import type { IGetTokenReturnData, ITokenPayload } from './model/auth.model';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class RegistrationService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
 
   async create(
     createRegistrationDto: CreateUserDto,
   ): Promise<RegistrationResponseDto> {
-    const isEmailAlreadyIsset = await this.userService.getUserByEmail(
+    const existingUser = await this.userService.getUserByEmail(
       createRegistrationDto.email,
     );
 
-    if (isEmailAlreadyIsset !== null) {
+    if (existingUser !== null) {
       throw new HttpException(
         'Użytkownik z tym adresem email już istnieje',
         HttpStatus.CONFLICT,
@@ -46,13 +41,14 @@ export class RegistrationService {
     const createdUser = await this.userService.create(preparedUser);
 
     const token = await this.generateToken({
+      sub: createdUser._id.toString(),
       username: createdUser.userName,
     });
 
-    return {
+    return plainToInstance(RegistrationResponseDto, {
       ...createdUser.toObject(),
       access_token: token.access_token,
-    };
+    });
   }
 
   async generateToken(
