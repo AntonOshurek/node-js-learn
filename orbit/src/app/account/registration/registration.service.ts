@@ -1,16 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 //SERVICES
-import { JwtService } from '../jwt/@registration';
+import { JwtService } from '../security/jwt/jwt.service';
 //DTO
 import { CreateUserDto, UserService } from '../user/@registration';
 import { RegistrationResponseDto } from './dto/registration.dto';
+import { CryptoService } from '../security/crypto/crypto.service';
 
 @Injectable()
 export class RegistrationService {
   constructor(
     private readonly userService: UserService,
     private readonly JwtService: JwtService,
+    private readonly cryptoService: CryptoService,
   ) {}
 
   async create(
@@ -27,7 +29,7 @@ export class RegistrationService {
       );
     }
 
-    const passwordHash = await this.userService.generateHash(
+    const passwordHash = await this.cryptoService.hashPassword(
       createRegistrationDto.password,
     );
 

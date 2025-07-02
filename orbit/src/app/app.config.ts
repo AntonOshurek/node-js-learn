@@ -1,8 +1,9 @@
 import { ConfigModule } from '@nestjs/config';
-import { validationSchema } from '../config/validation';
+//MODULES
 import { AccountModule } from './account/account.module';
 import { DatabaseModule } from '../database/database.module';
-import { JwtConfigModule } from './account/jwt/jwt.module';
+//CONFIGS
+import { validationSchema } from '../config/validation';
 
 export const appImports = [
   ConfigModule.forRoot({
@@ -12,5 +13,4 @@ export const appImports = [
   }),
   AccountModule,
   DatabaseModule,
-  JwtConfigModule,
 ];

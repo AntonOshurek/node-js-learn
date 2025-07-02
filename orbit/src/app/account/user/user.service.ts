@@ -7,8 +7,6 @@ import { InjectModel } from '@nestjs/mongoose';
 //DTO
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-//LIBS
-import { genSalt, hash } from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -64,10 +62,5 @@ export class UserService {
     email: string,
   ): Promise<UserDocument | null> {
     return this.userModel.findOne({ email }).select('+password').exec();
-  }
-
-  async generateHash(password: string): Promise<string> {
-    const salt = await genSalt(10);
-    return await hash(password, salt);
   }
 }
